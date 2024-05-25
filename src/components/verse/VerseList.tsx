@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchVerses } from "@/actions";
 import { useInView } from "react-intersection-observer";
 import styled from "styled-components";
-import { useFont } from "@/app/utils/hooks/useFont";
+// import { useFont } from "@/app/utils/hooks/useFont";
 // import { loadFontFaceV } from "@/app/utils/fontFaceHelper";
 import Bismillah from "@/components/bismillah/Bismillah";
 import ChapterHeader from "../header/ChapterHeader";
@@ -15,7 +15,7 @@ import { VersWitnTranslation } from "@/db/queries/verses";
 interface VerseListProps {
   search: Partial<VersWitnTranslation>;
   pages: [number, number];
-  initialVerses: Verse[];
+  initialVerses: VersWitnTranslation[];
   tid: number | undefined;
   direction: string | undefined;
 }
@@ -45,14 +45,14 @@ const VerseList = ({
   const [verses, setVerses] = useState(initialVerses);
 
   const [ref, inView] = useInView();
-  const loadedFonts = useFont(`${page}-v1`);
+  // const loadedFonts = useFont(`${page}-v1`);
 
   // console.log("fonts:", JSON.stringify(loadedFonts));
 
   const fetchMoreData = useCallback(async () => {
     console.log("Viewed:", page);
     const result = await fetchVerses({ ...search, page_number: page }, tid);
-    console.log(result);
+    // console.log(result);
     if (result?.length) {
       setVerses((prev) => [...prev, ...result]);
     }
@@ -65,7 +65,7 @@ const VerseList = ({
   }, [inView]);
 
   useEffect(() => {
-    if (page > pages[0] && page < pages[1]) {
+    if (page > pages[0] && page <= pages[1]) {
       fetchMoreData();
     }
   }, [page]);
@@ -75,7 +75,10 @@ const VerseList = ({
       <div className="flex justify-center m-auto w-full lg:w-3/5 my-6">
         <ChapterHeader chapterId={search.chapter_id} />
       </div>
-      <Bismillah chapterId={search.chapter_id} />
+      <Bismillah
+        chapterId={search.chapter_id}
+        verseNumber={verses[0]?.verse_number}
+      />
       {renderVerses(verses, direction)}
       <DivLoading ref={ref} hidden={page >= pages[1]} key="loader">
         Loading ...

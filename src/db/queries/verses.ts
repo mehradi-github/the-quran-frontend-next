@@ -2,7 +2,10 @@ import type { Verse, Translation, VerseTranslation } from "@prisma/client";
 import { db } from "@/db";
 import { select } from "@nextui-org/react";
 
-export type VersWitnTranslation = Verse & {
+export type VersWitnTranslation = Omit<
+  Verse,
+  "text_indopak" | "code_v1" | "code_v2"
+> & {
   verseTranslation?: { text: string }[];
 };
 export const getDirection = async (tid: number | undefined) => {
@@ -53,16 +56,39 @@ export const getVersesByPage = (
           {
             ...(v.verse_key ? { verse_key: v.verse_key } : {}),
           },
+          {
+            ...(v.verse_number
+              ? { verse_number: { gte: v.verse_number } }
+              : {}),
+          },
         ],
       },
-      include: {
+      // include: {
+      //   verseTranslation: {
+      //     where: { resource_id: { equals: tid } },
+      //     select: { text: true },
+      //   },
+      // },
+      orderBy: {
+        id: "asc",
+      },
+      select: {
+        id: true,
+        chapter_id: true,
+        verse_number: true,
+        verse_key: true,
+        page_number: true,
+        juz_number: true,
+        hizb_number: true,
+        rub_el_hizb_number: true,
+        ruku_number: true,
+        manzil_number: true,
+        sajdah_number: true,
+        text_uthmani: true,
         verseTranslation: {
           where: { resource_id: { equals: tid } },
           select: { text: true },
         },
-      },
-      orderBy: {
-        id: "asc",
       },
     });
   } else {
@@ -95,10 +121,29 @@ export const getVersesByPage = (
           {
             ...(v.verse_key ? { verse_key: v.verse_key } : {}),
           },
+          {
+            ...(v.verse_number
+              ? { verse_number: { gte: v.verse_number } }
+              : {}),
+          },
         ],
       },
       orderBy: {
         id: "asc",
+      },
+      select: {
+        id: true,
+        chapter_id: true,
+        verse_number: true,
+        verse_key: true,
+        page_number: true,
+        juz_number: true,
+        hizb_number: true,
+        rub_el_hizb_number: true,
+        ruku_number: true,
+        manzil_number: true,
+        sajdah_number: true,
+        text_uthmani: true,
       },
     });
   }
@@ -135,6 +180,9 @@ export const getMinMaxPage = async (
         },
         {
           ...(v.verse_key ? { verse_key: v.verse_key } : {}),
+        },
+        {
+          ...(v.verse_number ? { verse_number: { gte: v.verse_number } } : {}),
         },
       ],
     },

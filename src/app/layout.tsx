@@ -24,16 +24,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={"bg-gray-50 dark:bg-gray-700 " + inter.className}>
-        <Providers>
-          <Header />
-          <main>
-            <div className="container mx-auto min-h-screen">
-              <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
-            </div>
-          </main>
-        </Providers>
-      </body>
+      <Providers>
+        <Header />
+        <main>
+          <div className="container mx-auto min-h-screen">
+            <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+          </div>
+        </main>
+      </Providers>
     </html>
   );
 }

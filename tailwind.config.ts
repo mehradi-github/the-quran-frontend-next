@@ -14,7 +14,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        surah: ['"surahnames"'],
+        textArabic: "var(--font-text-arabic)",
+        textTranslation: "var(--font-text-translation)",
       },
     },
   },
