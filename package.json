@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild": "export NODE_OPTIONS=--max-old-space-size=4096",
     "start": "next start",
     "lint": "next lint",
     "prisma:seed": "node prisma/seed.ts",
